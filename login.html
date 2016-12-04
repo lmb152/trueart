@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>登陆页面</title>
+
+		<!-- Bootstrap CSS -->
+		<link href="css/style.css" rel="stylesheet">
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body class="login">
+	<div class='passport-wrapper'>
+		<header id="header" class="passport-header">
+	        <div id="logo" class="welcome">欢迎登录后台管理系统</div>
+	    </header>
+	    <div class="login_form">
+	    	<form method = "post" action = "admin.php"class="passport-form passport-form-sign" id="login-form">
+                <div class="form-item">
+                    <div class="form-cont">
+                        <input autocomplete="off" name="username" class="passport-txt xl w-full passport-error-input" placeholder="手机/用户名/ 邮箱" type="text">
+                	</div>
+                </div>
+                <div class="form-item">
+                    <div class="form-cont">
+                        <input autocomplete="off" name="password" class="passport-txt xl w-full" tabindex="2" placeholder="输入6~32位密码" type="password">
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-cont">
+                        <input type="submit" value="登录" id="login" class="passport-btn passport-btn-def xl w-full"/>
+                    </div>
+                </div>
+	            <input name="action" type="hidden" value="login" >
+            </form>
+	    </div>
+	</div>
+	</body>
+</html>

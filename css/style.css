@@ -1,0 +1,122 @@
+/*登录页css*/
+*{
+	margin:0;
+	padding: 0;
+}
+body {
+    color: #999;
+    font: 400 12px/1.4 Verdana,"Lantinghei SC","Hiragino Sans GB",'Microsoft YaHei',Helvetica,arial,simsun,sans-serif;
+}
+.login{
+	background: #f5f5f5;
+}
+.passport-header {
+    margin-bottom: 30px;
+}
+.passport-wrapper {
+    width: 640px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 100px;
+    padding-bottom: 20px;
+}
+#logo {
+    width: 300px;
+    height: 55px;
+    margin-right: auto;
+    margin-left: auto;
+}
+.welcome {
+	font-size: 30px;
+	color: #51cc73;
+}
+.login_form {
+    padding: 25px 0;
+    width: 400px;
+    margin:0 auto;
+    background-color: #fff;
+}
+.passport-form{
+	width: 300px;
+	margin: 50px auto;
+}
+.passport-sign .main-form {
+    width: 350px;
+    border-right: 2px solid #fafafa;
+}
+.passport-sign .main-form.main-form-sign {
+    min-height: 350px;
+}
+.passport-form .form-item {
+    margin-bottom: 20px;
+}
+.passport-form .form-cont {
+    position: relative;
+    line-height: 26px;
+}
+.form-cont .w-full{
+	width: 100%;
+    padding: 0 !important;
+}
+.passport-btn{
+	border: 0;
+	height: 40px;
+}
+.passport-btn.w-full {
+    width: 100%;
+    padding: 0 !important;
+}
+.passport-btn-def {
+    background: #35b558;
+    border-color: #35b558;
+    color: #fff;
+}
+.passport-form .passport-txt {
+    position: relative;
+    z-index: 10;
+    color: #666;
+    font-size: 12px;
+}
+.passport-txt.xl {
+    height: 40px;
+    padding: 11px;
+    font-size: 14px;
+    line-height: 18px;
+}
+.passport-btn.xl {
+    height: 40px;
+    padding: 0 30px;
+    font-size: 18px;
+    line-height: 38px;
+}
+.header{
+    background:#fed993; 
+    height:64px;
+    width: 100%;
+    position: fixed;
+}
+.header_r{
+    float: right;
+    padding-right:40px;
+    line-height:64px;
+    font-size:14px;
+}
+.header_r a{
+    color: #000000;
+}
+.header_l{
+    float: left; 
+    margin-left: 5%;
+}
+.header_l span{
+    font-family: Microsoft YaHei;
+    font-size: 20px;
+    color: #000000;
+    line-height: 64px;
+}
+.maincontent{
+    width:88%;
+    float:right;
+    min-height:700px;
+    margin-top:64px;
+}

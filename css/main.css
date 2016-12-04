@@ -1,0 +1,367 @@
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}
+fieldset,legend,input,textarea,select{color: #333; font-family:"微软雅黑";}
+ul,li{ list-style:none;}
+img{ border:none; display:block; width: 100%;}
+a{ text-decoration: none;}
+html{ width: 100%; height: 100%;}
+body{ width: 100%; position: relative; max-width: 640px; margin: 0 auto;}
+body.full_window{ width: 100%; height: 100%; position: relative; overflow: hidden; background: url(../images/bestie_bg.jpg) no-repeat; background-size: cover;}
+p{ text-align:center; font-weight:lighter;}
+a{ cursor:pointer;}
+input,textarea{ -webkit-appearance: none; border-radius:0; border: none; background: none; color: #6f4115; font-size: 14px; padding: 0 0 0 5%;}
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { 
+    color:    #6f4115;
+}
+* {
+      /*-webkit-touch-callout: none; *//*避免用户点击复制或保存图片*/
+      -webkit-text-size-adjust:none; /*改变字体大小，避免小于12px的字体被强制写成12px*/
+      -webkit-tap-highlight-color: rgba(0,0,0,0); /*去掉点击框*/
+      /*-webkit-user-select: none; *//*用户不能选择元素中的任何内容*/
+    }
+.auto{ margin:auto;}
+.left{ float:left; display:inline;}
+.w100{ width:100%;}
+.relative{ position:relative;}
+.absolute{ position:absolute;}
+
+/*index*/
+.start_part{ position: relative; width: 100%; height: 100%; overflow: hidden; display: none;}
+.fill_part{ position: relative; width: 100%; height: 100%; overflow: hidden; display: none;}
+.wish_part{ position: relative; width: 100%; height: 100%; overflow: hidden; display: none;}
+.index_01_lid{ position: absolute; width: 100%; top: 15%; left: 0; opacity: 0;}
+.index_01_lid.fade_01{ position: absolute; width: 100%; top: 15%; left: 0; opacity: 0;
+animation:fade_01 1s;
+-moz-animation:fade_01 1s; /* Firefox */
+-webkit-animation:fade_01 1s; /* Safari and Chrome */
+-o-animation:fade_01 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.index_01_words{ position: absolute; width: 100%; top: 65%; left: 0; opacity: 0;}
+.index_01_words.fade_02{ position: absolute; width: 100%; top: 65%; left: 0; opacity: 0;
+animation:fade_02 1s;
+-moz-animation:fade_02 1s; /* Firefox */
+-webkit-animation:fade_02 1s; /* Safari and Chrome */
+-o-animation:fade_02 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.index_arrow_01{ position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 0;}
+.index_arrow_01.fade_arrow{ position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 0;
+animation:fade_arrow 1.5s infinite;
+-webkit-animation:fade_arrow 1.5s infinite;
+}
+.index_arrow_02{ position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 0;}
+.index_arrow_02.fade_arrow{ position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 0;
+animation:fade_arrow 1.5s infinite;
+-webkit-animation:fade_arrow 1.5s infinite;
+}
+.index_arrow_03{ position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 0;}
+.index_arrow_03.fade_arrow{ position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 0;
+animation:fade_arrow 1.5s infinite;
+-webkit-animation:fade_arrow 1.5s infinite;
+}
+.index_02_words_01{ position: absolute; width: 100%; top: 32%; left: 0; opacity: 0;}
+.index_02_words_01.fade_03{ position: absolute; width: 100%; top: 32%; left: 0; opacity: 0;
+animation:fade_03 1s;
+-moz-animation:fade_03 1s; /* Firefox */
+-webkit-animation:fade_03 1s; /* Safari and Chrome */
+-o-animation:fade_03 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.index_02_words_02{ position: absolute; width: 100%; top: 47%; left: 0; opacity: 0;}
+.index_02_words_02.fade_04{ position: absolute; width: 100%; top: 47%; left: 0; opacity: 0;
+animation:fade_04 1s;
+-moz-animation:fade_04 1s; /* Firefox */
+-webkit-animation:fade_04 1s; /* Safari and Chrome */
+-o-animation:fade_04 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.index_02_words_03{ position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+.index_02_words_03.fade_05{ position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;
+animation:fade_05 1s;
+-moz-animation:fade_05 1s; /* Firefox */
+-webkit-animation:fade_05 1s; /* Safari and Chrome */
+-o-animation:fade_05 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.index_03_words_01{ position: absolute; width: 100%; top: 17%; left: 0; opacity: 0;}
+.index_03_words_01.fade_06{ position: absolute; width: 100%; top: 17%; left: 0; opacity: 0;
+animation:fade_06 1s;
+-moz-animation:fade_06 1s; /* Firefox */
+-webkit-animation:fade_06 1s; /* Safari and Chrome */
+-o-animation:fade_06 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.index_03_words_02{ position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+.index_03_words_02.fade_07{ position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;
+animation:fade_07 1s;
+-moz-animation:fade_07 1s; /* Firefox */
+-webkit-animation:fade_07 1s; /* Safari and Chrome */
+-o-animation:fade_07 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.index_03_btn{ position: absolute; width: 100%; bottom: 10%; left: 0; opacity: 0;}
+.index_03_btn.fade_08{ position: absolute; width: 100%; bottom: 10%; left: 0; opacity: 0;
+animation:fade_08 1s;
+-moz-animation:fade_08 1s; /* Firefox */
+-webkit-animation:fade_08 1s; /* Safari and Chrome */
+-o-animation:fade_08 1s; /* Opera */
+animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-webkit-animation-fill-mode: both;
+-o-animation-fill-mode: both;}
+.go_custom{ position: absolute; width: 44%; left: 28%; top: 32%; height: 42%; opacity: 0;}
+
+#self_name{ position: absolute; width: 75%; left: 10%; top: 30%; height: 8%; border-bottom: 2px solid #c8b49b;}
+#mobile{ position: absolute; width: 75%; left: 10%; top: 45%; height: 8%; border-bottom: 2px solid #c8b49b;}
+.checkcode_btn{ position: absolute; width: 100%; left: 0; top: 60%;}
+#checkcode{ position: absolute; width: 75%; left: 10%; top: 70%; height: 8%; border-bottom: 2px solid #c8b49b;}
+.submit_btn{ position: absolute; width: 100%; left: 0; top: 85%;}
+.get_checkcode{ position: absolute; width: 44%; height: 100%; top: 0; left: 28%;}
+.submit{ position: absolute; width: 44%; height: 100%; top: 0; left: 28%;}
+#bestie_name{ position: absolute; width: 75%; left: 10%; top: 25%; height: 8%; border-bottom: 2px solid #c8b49b;}
+#bestie_words{ position: absolute; width: 75%; left: 10%; top: 40%; height: 15%; border-bottom: 2px solid #c8b49b; resize:none;}
+.wish_notice{ position: absolute; width: 100%; left: 0; top: 60%;}
+.select_area{ position: absolute; width: 100%; left: 0; top: 75%; height: 10%;}
+#city{ position: absolute; width: 40%; left: 5%; font-size: 14px;}
+#city option{}
+#store{ position: absolute; width: 40%; left: 55%; font-size: 14px;}
+.share_area{ position: absolute; width: 100%; left: 0; top: 85%;}
+.share_to_bestie{ position: absolute; width: 44%; height: 100%; top: 0; left: 28%;}
+#seconds{ position: absolute; top: 20%; left: 37%; font-size: 14px; color: #585858;}
+
+
+
+@keyframes fade_01
+{
+from {position: absolute; width: 100%; top: 15%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_01 /* Firefox */
+{
+from {position: absolute; width: 100%; top: 15%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_01 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; top: 15%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_01 /* Opera */
+{
+from {position: absolute; width: 100%; top: 15%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+
+
+@keyframes fade_02
+{
+from {position: absolute; width: 100%; top: 65%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 68%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_02 /* Firefox */
+{
+from {position: absolute; width: 100%; top: 65%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 68%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_02 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; top: 65%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 68%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_02 /* Opera */
+{
+from {position: absolute; width: 100%; top: 65%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 68%; left: 0; opacity: 1;}
+}
+
+@keyframes fade_03
+{
+from {position: absolute; width: 100%; top: 32%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 35%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_03 /* Firefox */
+{
+from {position: absolute; width: 100%; top: 32%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 35%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_03 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; top: 32%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 35%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_03 /* Opera */
+{
+from {position: absolute; width: 100%; top: 32%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 35%; left: 0; opacity: 1;}
+}
+
+@keyframes fade_04
+{
+from {position: absolute; width: 100%; top: 47%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 50%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_04 /* Firefox */
+{
+from {position: absolute; width: 100%; top: 47%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 50%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_04 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; top: 47%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 50%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_04 /* Opera */
+{
+from {position: absolute; width: 100%; top: 47%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 50%; left: 0; opacity: 1;}
+}
+
+@keyframes fade_05
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_05 /* Firefox */
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_05 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_05 /* Opera */
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+
+@keyframes fade_06
+{
+from {position: absolute; width: 100%; top: 17%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_06 /* Firefox */
+{
+from {position: absolute; width: 100%; top: 17%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_06 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; top: 17%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_06 /* Opera */
+{
+from {position: absolute; width: 100%; top: 17%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 20%; left: 0; opacity: 1;}
+}
+
+@keyframes fade_07
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_07 /* Firefox */
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_07 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_07 /* Opera */
+{
+from {position: absolute; width: 100%; top: 37%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; top: 40%; left: 0; opacity: 1;}
+}
+
+@keyframes fade_08
+{
+from {position: absolute; width: 100%; bottom: 10%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; bottom: 8%; left: 0; opacity: 1;}
+}
+@-moz-keyframes fade_08 /* Firefox */
+{
+from {position: absolute; width: 100%; bottom: 10%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; bottom: 8%; left: 0; opacity: 1;}
+}
+@-webkit-keyframes fade_08 /* Safari and Chrome */
+{
+from {position: absolute; width: 100%; bottom: 10%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; bottom: 8%; left: 0; opacity: 1;}
+}
+@-o-keyframes fade_08 /* Opera */
+{
+from {position: absolute; width: 100%; bottom: 8%; left: 0; opacity: 0;}
+to {position: absolute; width: 100%; bottom: 8%; left: 0; opacity: 1;}
+}
+
+
+@-webkit-keyframes fade_arrow {
+  0% {
+     position: absolute; width: 100%; bottom: 5%; left: 0; opacity: 0.2;
+  }
+  50% {
+    position: absolute; width: 100%; bottom: 4%; left: 0; opacity: 0.6;
+  }
+  100% {
+    position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 1;
+  }
+}
+@keyframes fade_arrow {
+  0% {
+     position: absolute; width: 100%; bottom: 5%; left: 0; opacity: 0.2;
+  }
+  50% {
+    position: absolute; width: 100%; bottom: 4%; left: 0; opacity: 0.6;
+  }
+  100% {
+    position: absolute; width: 100%; bottom: 3%; left: 0; opacity: 1;
+  }
+}
+
+
+/*share*/
+.share_card{ position: relative; width: 100%; top: 0; left: 0; overflow: hidden;}
+.store_info{ position: absolute; width: 100%; height: 13%; bottom: 0%; display: none;}
+.share_again{ position: absolute; width: 100%; bottom: 0%; display: none;}
+.share_over{ position: absolute; width: 100%; bottom: 0%; display: none;}
+.share_again_btn{ position: absolute; width: 44%; left: 28%; top: 12%; height: 48%;}
+.store_name{ width: 100%; float: left; margin-left: 5%; display: inline-block;}
+.store_name p{ font-size: 14px; color: #6f4115; text-decoration: underline; line-height: 24px; text-align: left;}
+.store_msg{ width: 100%; float: left; display: inline-block; margin-left: 5%;}
+.store_msg p{ font-size: 12px; color: #6f4115; line-height: 18px; text-align: left;}
+.store_msg p .code{ text-decoration: underline;}
+.bestie_name{ position: absolute; top: 68%; left: 24%;}
+.bestie_name p{ font-size: 16px; color: #663300;}
+.wish_words{ position: absolute; width: 60%; top: 72%; left: 20%;}
+.wish_words p{ font-size: 12px; color: #663300; text-align: left;}
+.by_who{ position: absolute; top: 82%; right: 6%;}
+.by_who span{ font-size: 14px; color: #663300;}
+.who{ float: left; display: inline-block;}
+.space{ float: left; display: inline-block;}
+.date{ float: left; display: inline-block;}
+.tel{ float: left; display: inline-block; font-size: 12px; color: #6f4115 !important;}
+.code{ float: left; display: inline-block; font-size: 12px;}
+.share_layer{ display: none; position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 10;}
+.layer_bg{ position: fixed; width: 100%; height: 100%; top: 0; left: 0; background: #333; opacity: 0.5; z-index: 10;}
+.share_pic_area{ position: absolute; width: 100%; top: 20%; left: 0; z-index: 11;}
+.close_layer{ position: absolute; width: 44%; left:28%; top: 58%; height: 15%;}
