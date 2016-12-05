@@ -20,7 +20,7 @@ date_default_timezone_set('PRC');
 // define('MYSQL_DATABASE', 'boutique');
 define('MYSQL_SERVER', 'localhost');
 define('MYSQL_USER', 'root');
-define('MYSQL_PASSWORD', 'gaojian');
+define('MYSQL_PASSWORD', '111111');
 define('MYSQL_DATABASE', 'trueart');
 // define('MYSQL_SERVER', 'localhost');
 // define('MYSQL_USER', 'root');

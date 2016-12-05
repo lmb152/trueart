@@ -1,4 +1,8 @@
 <?php
+session_start();
+if(!$_SESSION['uid']){
+	exit('请先登录');
+}
 require_once 'medoo.php';
 ?>
 <!doctype html>
@@ -22,7 +26,7 @@ require_once 'medoo.php';
 
 <body>
 <?php if($_GET['action'] == 'menu'){ 
-	$sql="select * from menu order by parentid asc, sort asc";
+	$sql="select * from menu where uid='".$_SESSION['uid']."' order by parentid asc, sort asc";
 	$datas = $database->query($sql)->fetchAll();
 ?>
 <div id="main">
@@ -61,24 +65,30 @@ require_once 'medoo.php';
 				</td>
 				<td>
 					<?php 
-						if($list_item['parentid']):
+						if($list_item['parentid']){
 							$parent='select menutitle from menu where menuid='.$list_item['parentid'];
-							$parent_title=$database->query($parent)->fetch;
+							$parent_title=$database->query($parent)->fetch();
 							echo $parent_title['menutitle'];
-						else:
+						}else{
 							echo '一级菜单';
-						endif;
+						}
 					 ?>
 				</td>
 				<td style="vertical-align: middle;text-align: center;max-width: 350px;overflow: scroll;">
-					<?php echo $list_item["linkurl"];?>
+					<?php 
+						if($list_item['linkurl']){
+							echo $list_item["linkurl"];
+						}else{
+							echo '图文推无需填写';
+						}
+					?>
 				</td>
 				<td>
 					<?php
-						$news_sql="select * from wechat_news where news_id =".$list_item['news_id'];
-						$news=$database->query($news_sql)->fetchAll();
-						if(count($news)){
-							echo $news[0]['news_title'];
+						$news_sql="select * from wechat_news where media_id ='".$list_item['msg_id']."'";
+						$news=$database->query($news_sql)->fetch();
+						if($news){
+							echo $news['news_title'];
 						}else{
 							echo '网页链接不用此项';
 						}
@@ -109,43 +119,51 @@ require_once 'medoo.php';
 	</div>
 </div>
 <?php }elseif($_GET['action'] == 'subscribe'){
-$sql="select * from subscribe where user_id=1 order by id desc";
-$datas = $database->query($sql)->fetchAll();
+$sql="select * from subscribe where user_id='".$_SESSION['uid']."' order by id desc";
+$data = $database->query($sql)->fetch();
 ?>
 <div id="main">
 	<div class="content">
 		<form action="api.php" method="post" enctype="multipart/form-data">
 			<table class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
-					<td class="tit2" colspan='4' valign="top" width="15%" align="center">自动回复图文内容</td>
+					<td class="tit2" colspan='4' valign="top" align="center">自动回复图文内容</td>
 				</tr>
 				<tr>
 					<td>外链地址</td>
-					<td class="tit2" colspan='3' valign="top" width="15%" align="center">
-						<input type='text' name='linkurl' value="<?php print_r($datas[0]['linkurl']);?>" />
+					<td class="tit2" colspan='3' valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<input type='text' class="form-control" name='linkurl' value="<?php print_r($data['linkurl']);?>" />
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>标题</td>
-					<td class="tit2" colspan='3'  valign="top" width="15%" align="center">
-						<input type='text' name='title' value="<?php print_r($datas[0]['title']);?>"/>
+					<td class="tit2" colspan='3'  valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<input type='text' class="form-control" name='title' value="<?php print_r($data['title']);?>"/>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>描述</td>
-					<td class="tit2" colspan='3'  valign="top" width="15%" align="center">
-						<textarea type='text' name='description'><?php print_r($datas[0]['description']);?></textarea>
+					<td class="tit2" colspan='3'  valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<textarea type='text' class="form-control" name='description'><?php print_r($data['description']);?></textarea>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>图文中间的图片</td>
 					<td valign="top" align="center">
-						<input type='file' name='content' />
+						<div class="form-group col-sm-9">
+							<input type='file' class="form-control" name='content' />
+						</div>
 					</td>
 
 					<td colspan='2'>
-						<?php if(!empty($datas[0]['content']) && $datas[0]['content']){
-							$imgsrc=unserialize($datas[0]['content']);
+						<?php if(!empty($data['content']) && $data['content']){
+							$imgsrc=unserialize($data['content']);
 						?>
 							<img width='200px;' src="<?php echo $imgsrc[0];?>">
 						<?php }?>
@@ -205,43 +223,51 @@ $datas = $database->query($sql)->fetchAll();
 		<?php } ?>
 	</table>
 <?php }elseif($_GET['action'] == 'editqrcode'){
-$sql="select * from qrcode_content where user_id=1 and qrcode_id=".$_GET['qrcode_id']." order by id desc";
-$datas = $database->query($sql)->fetchAll();
+$sql="select * from qrcode_content where user_id='".$_SESSION['uid']."' and qrcode_id=".$_GET['qrcode_id']." order by id desc";
+$datas = $database->query($sql)->fetch();
 ?>
 <div id="main">
 	<div class="content">
 		<form action="api.php" method="post" enctype="multipart/form-data">
 			<table class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
-					<td class="tit2" colspan='4' valign="top" width="15%" align="center">自动回复图文内容</td>
+					<td class="tit2" colspan='4' valign="top" align="center">自动回复图文内容</td>
 				</tr>
 				<tr>
 					<td>外链地址</td>
-					<td class="tit2" colspan='3' valign="top" width="15%" align="center">
-						<input type='text' name='linkurl' value="<?php print_r($datas[0]['linkurl']);?>" />
+					<td class="tit2" colspan='3' valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<input type='text' class="form-control" name='linkurl' value="<?php print_r($datas['linkurl']);?>" />
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>标题</td>
-					<td class="tit2" colspan='3'  valign="top" width="15%" align="center">
-						<input type='text' name='title' value="<?php print_r($datas[0]['title']);?>"/>
+					<td class="tit2" colspan='3'  valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<input type='text' class="form-control" name='title' value="<?php print_r($datas['title']);?>"/>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>描述</td>
-					<td class="tit2" colspan='3'  valign="top" width="15%" align="center">
-						<textarea type='text' name='description'><?php print_r($datas[0]['description']);?></textarea>
+					<td class="tit2" colspan='3'  valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<textarea type='text' class="form-control" name='description'><?php print_r($datas['description']);?></textarea>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td>图文中间的图片</td>
 					<td valign="top" align="center">
-						<input type='file' name='content' />
+						<div class="form-group col-sm-9">
+							<input type='file' class="form-control" name='content' />
+						</div>
 					</td>
 
 					<td colspan='2'>
-						<?php if(!empty($datas[0]['content']) && $datas[0]['content']){
-							$imgsrc=unserialize($datas[0]['content']);
+						<?php if(!empty($datas['content']) && $datas['content']){
+							$imgsrc=unserialize($datas['content']);
 						?>
 							<img width='200px;' src="<?php echo $imgsrc[0];?>">
 						<?php }?>
@@ -249,7 +275,7 @@ $datas = $database->query($sql)->fetchAll();
 				</tr>
 				<tr>
 					<td colspan="4" valign="top" align="center">
-						<input type="submit" value="保存"/>
+						<input type="submit" class="btn btn-success" value="保存"/>
 						<input type="hidden" name="qrcode_id" value="<?php echo $_GET['qrcode_id']?>"/>
 						<input type="hidden" name="action" value="editqrcode"/>
 					</td>
@@ -261,7 +287,7 @@ $datas = $database->query($sql)->fetchAll();
 	</div>
 </div>
 <?php }elseif($_GET['action'] == 'smg'){
-	$sql="select * from send_message";
+	$sql="select * from send_message where uid='".$_SESSION['uid']."'";
 	$datas = $database->query($sql)->fetchAll();
 	?>
 <div id="main">
@@ -315,7 +341,7 @@ $datas = $database->query($sql)->fetchAll();
 	</div>
 </div>
 <?php }elseif($_GET['action'] == 'keywords'){
-	$sql="select * from keywords";
+	$sql="select * from keywords where uid='".$_SESSION['uid']."'";
 	$datas = $database->query($sql)->fetchAll();
 	?>
 <div id="main">

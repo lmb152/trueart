@@ -1,4 +1,8 @@
 <?php
+session_start();
+if(!$_SESSION['uid']){
+	exit('请先登录');
+}
 require_once 'medoo.php';
 ?>
 <!doctype html>
@@ -7,9 +11,10 @@ require_once 'medoo.php';
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>无标题文档</title>
 <link href="css/skin.css" rel="stylesheet" type="text/css" />
-<link href="css/admin.css" rel="stylesheet" type="text/css">
-
-<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -35,46 +40,56 @@ require_once 'medoo.php';
 				</tr>
 				<tr>
 					<td valign="top" align="center">
-						<input type="text" name="menutitle" />
+						<div class="form-group col-sm-9">
+							<input class="form-control"  type="text" name="menutitle" />
+						</div>
 					</td>
 					<td valign="top" align="center">
-						<select name="parentmenu">
-							<option value="0">一级菜单</option>
-							<?php 
-								$parent='select * from menu where parentid=0';
-								$parent_menu=$database->query($parent)->fetchAll();
-								foreach ($parent_menu as $key => $value) {
-							?>
-								<option value="<?php echo $value['menuid']?>"><?php echo $value['menutitle']?></option>
-							<?php
-								}
-							 ?>
-						</select>
+						<div class="form-group col-sm-9">
+							<select class="form-control" name="parentmenu">
+								<option value="0">一级菜单</option>
+								<?php 
+									$parent='select * from menu where parentid=0 and uid="'.$_SESSION['uid'].'"';
+									$parent_menu=$database->query($parent)->fetchAll();
+									foreach ($parent_menu as $key => $value) {
+								?>
+									<option value="<?php echo $value['menuid']?>"><?php echo $value['menutitle']?></option>
+								<?php
+									}
+								 ?>
+							</select>
+						</div>
+					</td>
+					<td valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<input class="form-control"  type="text" name="linkurl" />
+						</div>
+					</td>
+					<td valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<select name="newsid" class="form-control" style="max-width:200px;">
+								<?php 
+									$news_all="select * from wechat_news where uid='".$_SESSION['uid']."' order by update_time desc";
+									$allnews=$database->query($news_all)->fetchAll();
+								?>
+								<option value="0">网页链接不用填写</option>
+								<?php foreach ($allnews as $key => $value) {?>
+									<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
+								<?php }?>
+							</select>
+						</div>
 						
 					</td>
 					<td valign="top" align="center">
-						<input type="text" name="linkurl" />
-					</td>
-					<td valign="top" align="center">
-						<select name="newsid" style="max-width:200px;">
-							<?php 
-								$news_all="select * from wechat_news order by update_time desc";
-								$allnews=$database->query($news_all)->fetchAll();
-							?>
-							<option value="0">网页链接不用填写</option>
-							<?php foreach ($allnews as $key => $value) {?>
-								<option value="<?php echo $value['news_id']?>"><?php echo $value['news_title']?></option>
-							<?php }?>
-						</select>
-					</td>
-					<td valign="top" align="center">
-						<input type="text" name="menusort" />
+						<div class="form-group col-sm-9">
+							<input class="form-control"  type="text" name="menusort" />
+						</div>
 					</td>
 					
 				</tr>
 				<tr>
 					<td colspan="5" style="text-align:center;">
-						<input type="submit" value="保存" />
+						<input type="submit" class="btn btn-success" value="保存" />
 						<input type="hidden" value="addmenu" name="action"/>
 					</td>
 				</tr>
@@ -89,8 +104,8 @@ require_once 'medoo.php';
 		header("Location:list.php?action=menu");
 	}
 	$sql="select * from menu where menuid=".$menuid;
-	$datas = $database->query($sql)->fetchAll();
-	$menudata=$datas[0];
+	$datas = $database->query($sql)->fetch();
+	$menudata=$datas;
 ?>
 <div id="main">
 	<div class="content">
@@ -113,64 +128,76 @@ require_once 'medoo.php';
 				</tr>
 				<tr>
 					<td valign="top" align="center">
-						<input type="text" value="<?php echo $menudata['menutitle']?>" name="menutitle" />
+						<div class="form-group col-sm-9">
+							<input class="form-control" type="text" value="<?php echo $menudata['menutitle']?>" name="menutitle" />
+						</div>
 					</td>
 					<td valign="top" align="center">
-						<select name="parentmenu" style="max-width: 200px;">
-							<option selected="selected" value="<?php echo $menudata['parentid']?>">
+						<div class="form-group col-sm-9">
+							<select name="parentmenu" class="form-control" style="max-width: 200px;">
+								<option selected="selected" value="<?php echo $menudata['parentid']?>">
+									<?php 
+										if($menudata['parentid']){
+											$parent='select * from menu where menuid='.$menudata['parentid'];
+											$parent_menu=$database->query($parent)->fetchAll();
+											echo $parent_menu[0]['menutitle'];
+										}else{
+											echo '一级菜单';
+										}
+										
+									?>
+								</option>
+								<option value="0">一级菜单</option>
 								<?php 
-									if($menudata['parentid']){
-										$parent='select * from menu where menuid='.$menudata['parentid'];
-										$parent_menu=$database->query($parent)->fetchAll();
-										echo $parent_menu[0]['menutitle'];
-									}else{
-										echo '一级菜单';
-									}
-									
+									$parent='select * from menu where parentid=0';
+									$parent_menu=$database->query($parent)->fetchAll();
+									foreach ($parent_menu as $key => $value) {
 								?>
-							</option>
-							<option value="0">一级菜单</option>
-							<?php 
-								$parent='select * from menu where parentid=0';
-								$parent_menu=$database->query($parent)->fetchAll();
-								foreach ($parent_menu as $key => $value) {
-							?>
-								<option value="<?php echo $value['menuid']?>"><?php echo $value['menutitle']?></option>
-							<?php
-								}
-							 ?>
-						</select>
+									<option value="<?php echo $value['menuid']?>"><?php echo $value['menutitle']?></option>
+								<?php
+									}
+								 ?>
+							</select>
+						</div>
+						
 						
 					</td>
 					<td valign="top" align="center">
-						<input type="text" value="<?php echo $menudata['linkurl']?>" name="linkurl" />
+						<div class="form-group col-sm-9">
+							<input type="text" class="form-control" value="<?php echo $menudata['linkurl']?>" name="linkurl" />
+						</div>
+						
 					</td>
 					<td valign="top" align="center">
-						<select name="newsid" style="max-width:200px;">
-							<?php 
-								$news_sql="select * from wechat_news where news_id=".$menudata['news_id']." order by update_time desc";
-								$newsid=$database->query($news_sql)->fetchAll();
-								$news_all="select * from wechat_news where news_id!= ".$menudata['news_id']." order by update_time desc";
-								$allnews=$database->query($news_all)->fetchAll();
-							?>
-							<?php if($menudata['news_id']!= 0){ ?>
-								<option value="<?php echo $menudata['news_id']?>"><?php $echo=$newsid[0]['news_title']; echo $echo;?></option>	
-							<?php } ?>
-							<option value="0">链接网页不用填写</option>		
-							<!-- <option value="999">链接网页不用填写</option> -->
-							<?php foreach ($allnews as $key => $value) {?>
-								<option value="<?php echo $value['news_id']?>"><?php echo $value['news_title']?></option>
-							<?php }?>
-						</select>
+						<div class="form-group col-sm-9">
+							<select name="newsid" class="form-control" style="max-width:200px;">
+								<?php 
+									$news_sql="select * from wechat_news where media_id='".$menudata['msg_id']."' order by update_time desc";
+									$newsid=$database->query($news_sql)->fetch();
+									$news_all="select * from wechat_news where media_id!= '".$menudata['msg_id']."' order by update_time desc";
+									$allnews=$database->query($news_all)->fetchAll();
+								?>
+								<?php if($menudata['msg_id']!= '0'){ ?>
+									<option value="<?php echo $menudata['media_id']?>"><?php $echo=$newsid['news_title']; echo $echo;?></option>	
+								<?php } ?>
+								<option value="0">链接网页不用填写</option>		
+								<!-- <option value="999">链接网页不用填写</option> -->
+								<?php foreach ($allnews as $key => $value) {?>
+									<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
+								<?php }?>
+							</select>
+						</div>
 					</td>
 					<td valign="top" align="center">
-						<input type="text" value="<?php echo $menudata['sort']?>" name="menusort" />
+						<div class="form-group col-sm-9">
+							<input type="text" class="form-control" value="<?php echo $menudata['sort'];?>" name="menusort" />
+						</div>
 					</td>
 					
 				</tr>
 				<tr>
 					<td colspan="5" style="text-align:center;">
-						<input type="submit" value="保存" />
+						<input class="btn btn-success" type="submit" value="保存" />
 						<input type="hidden" value="<?php echo $menuid;?>" name="menuid"/>
 						<input type="hidden" value="editmenu" name="action"/>
 					</td>
@@ -203,14 +230,15 @@ require_once 'medoo.php';
 				<tr>
 					<td class="tit2" valign="top" width="15%" align="center">回复名称</td>
 					<td class="tit2" valign="top" width="15%" align="center">微信图文标题</td>
+					<td class="tit2" valign="top" width="15%" align="center">排序</td>
 				</tr>
 
 				<tr>
 					<td valign="top" align="center">
-						<input type="text" name="title" value="<?php print $list_item["title"]; ?>" />
-					</td>
-					<td valign="top" align="center">
-						<input type="text" name="sort" value="<?php print $list_item['sort']; ?>" />
+						<div class="form-group col-sm-9">
+							<input type="text" class="form-control" name="title" value="<?php print $list_item["title"]; ?>" />
+						</div>
+						
 					</td>
 					<td valign="top" align="center">
 						<?php 
@@ -219,20 +247,26 @@ require_once 'medoo.php';
 							$wechat_sql_all='select * from wechat_news order by update_time desc';
 							$wechat=$database->query($wechat_sql_all)->fetchAll();
 						?>
-						<select name="wechat" style="max-width:200px;">
-							<option value="<?php print $wechat_single['news_id']; ?>"><?php print $wechat_single['news_title'] ;?></option>
-							<option value="0">链接网页不用填写</option>
-							<?php foreach ($wechat as $key => $value) { ?>
-							<option value="<?php echo $value['news_id']; ?>"><?php echo $value['news_title']; ?></option>
+						<div class="form-group col-sm-9">
+							<select name="wechat" class="form-control" style="max-width:200px;">
+								<option value="<?php print $wechat_single['news_id']; ?>"><?php print $wechat_single['news_title'] ;?></option>
+								<option value="0">链接网页不用填写</option>
+								<?php foreach ($wechat as $key => $value) { ?>
+								<option value="<?php echo $value['news_id']; ?>"><?php echo $value['news_title']; ?></option>
 
-							<?php } ?>
-
-						</select>
+								<?php } ?>
+							</select>
+						</div>
+					</td>
+					<td valign="top" align="center">
+						<div class="form-group col-sm-9">
+							<input type="text" class="form-control" name="sort" value="<?php print $list_item['sort']; ?>" />
+						</div>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" valign="top" align="center">
-						<input type="submit" value="保存"/>
+					<td colspan="3" valign="top" align="center">
+						<input type="submit" class="btn btn-success" value="保存"/>
 						<input type="hidden" name="action" value="editsmg"/>
 						<input type="hidden" name="smgid" value="<?php print $_GET['id']?>"/>
 					</td>
@@ -268,10 +302,15 @@ require_once 'medoo.php';
 
 				<tr>
 					<td valign="top" align="center">
-						<input type="text" name="title" value="" />
+						<div class="form-group col-sm-9">
+							<input type="text" class="form-control" name="title" value="" />	
+						</div>
+						
 					</td>
 					<td valign="top" align="center">
-						<input type="text" name="sort" value="" />
+						<div class="form-group col-sm-9">
+							<input type="text" class="form-control" name="sort" value="" />	
+						</div>
 					</td>
 					<td valign="top" align="center">
 						<?php 
@@ -279,18 +318,19 @@ require_once 'medoo.php';
 							$wechat=$database->query($wechat_sql_all)->fetchAll();
 							// print_r($wechat);
 						?>
-						<select name="wechat" style="max-width:200px;">
-							<?php foreach ($wechat as $key => $value) {?>
-								<option value="<?php print $value['news_id']; ?>"><?php print $value['news_title']; ?></option>
-							<?php }?>
-							
-
-						</select>
+						<div class="form-group col-sm-9">
+							<select name="wechat" class="form-control" style="max-width:200px;">
+								<?php foreach ($wechat as $key => $value) {?>
+									<option value="<?php print $value['news_id']; ?>"><?php print $value['news_title']; ?></option>
+								<?php }?>
+							</select>
+						</div>
+						
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2" valign="top" align="center">
-						<input type="submit" value="保存"/>
+					<td colspan="3" valign="top" align="center">
+						<input class="btn btn-success" type="submit" value="保存"/>
 						<input type="hidden" name="action" value="addsmg"/>
 					</td>
 					
@@ -313,12 +353,14 @@ require_once 'medoo.php';
 
 				<tr>
 					<td valign="top" align="center">
-						<input type="text" name="sence_name" value="" />
+						<div class="form-group col-sm-6">
+							<input type="text" class="form-control" name="sence_name" value="" />
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" valign="top" align="center">
-						<input type="submit" value="保存"/>
+						<input type="submit" class="btn btn-success" value="保存"/>
 						<input type="hidden" name="action" value="addqrcode"/>
 					</td>
 					
@@ -344,7 +386,9 @@ require_once 'medoo.php';
 						关键字
 					</td>
 					<td valign="top" align="center">
-						<input type="text" name="keyword" value="" />
+						<div class="form-group col-sm-9">
+							<input type="text" class="form-control" name="keyword" value="" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -352,11 +396,13 @@ require_once 'medoo.php';
 						回复类型
 					</td>
 					<td valign="top" align="center">
-						<select id="select_type" name='type'>
-							<option value='1'>文本类型</option>
-							<option value='2'>微信图文推</option>
-							<option value='3'>链接</option>
-						</select>
+						<div class="form-group col-sm-9">
+							<select id="select_type" class="form-control" name='type'>
+								<option value='1'>文本类型</option>
+								<option value='2'>微信图文推</option>
+								<option value='3'>链接</option>
+							</select>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -364,22 +410,25 @@ require_once 'medoo.php';
 						回复内容
 					</td>
 					<td valign="top" align="center">
-						<textarea id='content' type="text" name="content"></textarea>
-						<input style='display: none;' id='linkurl' type='text' name='linkurl'/>
-						<select style='display: none;' id='related_article' name='related_article'>
-							<?php 
-								$news_all="select * from wechat_news order by update_time desc";
-								$allnews=$database->query($news_all)->fetchAll();
-							?>
-							<?php foreach ($allnews as $key => $value) {?>
-								<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
-							<?php }?>
-						</select>
+						<div class="form-group col-sm-9">
+							<textarea id='content' type="text" class="form-control" name="content"></textarea>
+							<input style='display: none;' class="form-control" id='linkurl' type='text' name='linkurl'/>
+							<select style='display: none;' class="form-control" id='related_article' name='related_article'>
+								<?php 
+									$news_all="select * from wechat_news order by update_time desc";
+									$allnews=$database->query($news_all)->fetchAll();
+								?>
+								<?php foreach ($allnews as $key => $value) {?>
+									<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
+								<?php }?>
+							</select>
+						</div>
+						
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" valign="top" align="center">
-						<input type="submit" value="保存"/>
+						<input class="btn btn-success" type="submit" value="保存"/>
 						<input type="hidden" name="action" value="addkeywords"/>
 					</td>
 					
@@ -431,7 +480,9 @@ $data = $database->query($sql)->fetch();
 						关键字
 					</td>
 					<td valign="top" align="center">
-						<input type="text" name="keyword" value="<?php echo $data['keyword'];?>" />
+						<div class="form-group col-sm-5">
+						 	<input type="text" class="form-control" name="keyword" value="<?php echo $data['keyword'];?>" />
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -439,27 +490,30 @@ $data = $database->query($sql)->fetch();
 						回复类型
 					</td>
 					<td valign="top" align="center">
-						<select id="select_type" name='type'>
-							<option value='<?php echo $data['type'];?>'>
-								<?php 
-									switch ($data['type']) {
-							            case '1':
-							                $type='文本类型';
-							                break;
-							            case '2':
-							                $type='图文推';
-							                break;
-							            case '3':
-							                $type='链接';
-							                break;
-									}
-									echo $type;
-								?>
-							</option>
-							<option value='1'>文本类型</option>
-							<option value='2'>微信图文推</option>
-							<option value='3'>链接</option>
-						</select>
+						<div class="form-group col-sm-5">
+							<select id="select_type" class="form-control" name='type'>
+								<option value='<?php echo $data['type'];?>'>
+									<?php 
+										switch ($data['type']) {
+								            case '1':
+								                $type='文本类型';
+								                break;
+								            case '2':
+								                $type='图文推';
+								                break;
+								            case '3':
+								                $type='链接';
+								                break;
+										}
+										echo $type;
+									?>
+								</option>
+								<option value='1'>文本类型</option>
+								<option value='2'>微信图文推</option>
+								<option value='3'>链接</option>
+							</select>
+						</div>
+						
 					</td>
 				</tr>
 				<tr>
@@ -467,27 +521,29 @@ $data = $database->query($sql)->fetch();
 						回复内容
 					</td>
 					<td valign="top" align="center">
-						<textarea id='content' <?php if($data['type']!='1'):?> style='display: none;'<?php endif;?>  type="text" name="content" ><?php echo $data['content'];?></textarea>
-						<input <?php if($data['type']!='3'):?> style='display: none;'<?php endif;?> id='linkurl' type='text' name='linkurl' value='<?php echo $data['linkurl'];?>'/>
-						<select <?php if($data['type']!='2'):?> style='display: none;'<?php endif;?> id='related_article' name='related_article'>
-							<?php 
-								$news_all="select * from wechat_news order by update_time desc";
-								$allnews=$database->query($news_all)->fetchAll();
-								$new_sql="select * from wechat_news where media_id='".$data['related_article']."'";
-								$new=$database->query($new_sql)->fetch();
-							?>
-							<?php if($data['type']=='2'):?>
-							<option value='<?php echo $data['related_article'];?>'><?php echo $new['news_title']?></option>
-							<?php endif;?>
-							<?php foreach ($allnews as $key => $value) {?>
-								<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
-							<?php }?>
-						</select>
+						<div class="form-group col-sm-5">
+							<textarea class="form-control" id='content' <?php if($data['type']!='1'):?> style='display: none;'<?php endif;?>  type="text" name="content" ><?php echo $data['content'];?></textarea>
+							<input class="form-control" <?php if($data['type']!='3'):?> style='display: none;'<?php endif;?> id='linkurl' type='text' name='linkurl' value='<?php echo $data['linkurl'];?>'/>
+							<select class="form-control" <?php if($data['type']!='2'):?> style='display: none;'<?php endif;?> id='related_article' name='related_article'>
+								<?php 
+									$news_all="select * from wechat_news order by update_time desc";
+									$allnews=$database->query($news_all)->fetchAll();
+									$new_sql="select * from wechat_news where media_id='".$data['related_article']."'";
+									$new=$database->query($new_sql)->fetch();
+								?>
+								<?php if($data['type']=='2'):?>
+								<option value='<?php echo $data['related_article'];?>'><?php echo $new['news_title']?></option>
+								<?php endif;?>
+								<?php foreach ($allnews as $key => $value) {?>
+									<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
+								<?php }?>
+							</select>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2" valign="top" align="center">
-						<input type="submit" value="保存"/>
+						<input type="submit" class="btn btn-success" value="保存"/>
 						<input type="hidden" name="keyword_id" value="<?php echo $key_id;?>"/>
 						<input type="hidden" name="action" value="editkeywords"/>
 					</td>

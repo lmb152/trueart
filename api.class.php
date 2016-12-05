@@ -15,9 +15,10 @@ class api{
         $menu['menutitle']=trim($_POST['menutitle']);
         $menu['parentid']=$_POST['parentmenu'];
         $menu['created']=time();
-        $menu['news_id']=$_POST['newsid']=="0"?:$_POST['newsid'];
+        $menu['msg_id']=$_POST['newsid']=="0"?:$_POST['newsid'];
         $menu['sort']=trim($_POST['menusort']);
         $menu['linkurl']=trim($_POST['linkurl']);
+        $menu['uid']=$_SESSION['uid'];
         $menuid=$this->database->insert('menu',$menu);
         if($menuid){
             header("Location:list.php?action=menu");
@@ -35,9 +36,10 @@ class api{
         $menu['menutitle']=trim($_POST['menutitle']);
         $menu['parentid']=$_POST['parentmenu'];
         $menu['created']=time();
-        $menu['news_id']=$_POST['newsid'];
+        $menu['msg_id']=$_POST['newsid'];
         $menu['sort']=trim($_POST['menusort']);
         $menu['linkurl']=trim($_POST['linkurl']);
+        $menu['uid']=$_SESSION['uid'];
         $menuid=$this->database->update('menu',$menu,array('menuid=' => $menuid ));
         if($menuid){
             header("Location:list.php?action=menu");
@@ -61,6 +63,7 @@ class api{
         $smg['title']=trim($_POST['title']);
         $smg['news_id']=$_POST['wechat'];
         $smg['sort']=$_POST['sort'];
+        $smg['uid']=$_SESSION['uid'];
         $smgid=$this->database->insert('send_message',$smg);
         if($smgid){
             header("Location:list.php?action=smg");
@@ -78,6 +81,7 @@ class api{
         $smg['title']=trim($_POST['title']);
         $smg['news_id']=$_POST['wechat'];
         $smg['sort']=$_POST['sort'];
+        $smg['uid']=$_SESSION['uid'];
         $smgid=$this->database->update('send_message',$smg,array('id=' => $smgid ));
         if($smgid){
             header("Location:list.php?action=smg");
@@ -116,7 +120,7 @@ class api{
         // $qrcode['linkurl']=$_POST['linkurl'];
 
         $qrcode['sence_id']=$scene_str;
-
+        $qrcode['uid']=$_SESSION['uid'];
         $qrcodeid=$this->database->insert('sence_qrcode',$qrcode);
         if($qrcodeid){
 
@@ -161,12 +165,12 @@ class api{
                 echo '文件格式不正确或者文件过大';
             }
         }
-        $qrcode_content['user_id']=1;
+        $qrcode_content['user_id']=$_SESSION['uid'];
         $qrcode_content['linkurl']=$_POST['linkurl'];
         $qrcode_content['title']=$_POST['title'];
         $qrcode_content['description']=$_POST['description'];
         $qrcode_content['qrcode_id']=$_POST['qrcode_id'];
-        $sql='select * from qrcode_content where user_id=1 and qrcode_id='.$_POST['qrcode_id'];
+        $sql='select * from qrcode_content where user_id="'.$_SESSION['uid'].'" and qrcode_id='.$_POST['qrcode_id'];
         $tmp=$this->database->query($sql)->fetchAll();
         if(!empty($tmp)){
             $qrcode_contentid=$this->database->update('qrcode_content',$qrcode_content,array('id=' => $tmp[0]['id']));
@@ -228,7 +232,7 @@ class api{
             }
         }
         
-        $subscribe['user_id']=1;
+        $subscribe['user_id']=$_SESSION['uid'];
         $subscribe['linkurl']=$_POST['linkurl'];
         $subscribe['title']=$_POST['title'];
         $subscribe['description']=$_POST['description'];
@@ -256,7 +260,8 @@ class api{
         $type=$_POST['type'];
         $insert_data=array(
                 'keyword'=>$keyword,
-                'type'=>$type
+                'type'=>$type,
+                'uid'=>$_SESSION['uid']
             );
         switch ($type) {
             case '1':
@@ -287,7 +292,8 @@ class api{
         $type=$_POST['type'];
         $update_data=array(
                 'keyword'=>$keyword,
-                'type'=>$type
+                'type'=>$type,
+                'uid'=>$_SESSION['uid']
             );
         switch ($type) {
             case '1':

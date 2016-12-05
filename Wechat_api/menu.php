@@ -28,14 +28,11 @@ foreach ($datas as $key => $value) {
            "name":"'.$value['menutitle'].'",
            "sub_button":[';
       foreach ($child_data as $ckey => $cvalue) {
-        if($cvalue['news_id']!=0){
-          $media_sql="select media_id from wechat_news where news_id=".$cvalue['news_id'];
-          $media_id=$database->query($media_sql)->fetchAll();
-          $media_id=$media_id[0]['media_id'];
+        if($cvalue['msg_id']!='0'){
           $menu_content.='{  
                   "type":"media_id",
                   "name":"'.$cvalue['menutitle'].'",
-                  "media_id":"'.$media_id.'"
+                  "media_id":"'.$cvalue['msg_id'].'"
               },';
 
         }else{
