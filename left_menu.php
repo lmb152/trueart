@@ -23,7 +23,7 @@
                             <li><a href="list.php?action=menu" target="main" title="">菜单管理</a></li>
                         </ul>
                     </li>
-                    <li class="user-account-nav-list-item">
+                   <!--  <li class="user-account-nav-list-item">
                         <div class="user-account-nav-item">
                             <i class="user-nav-message-manage"></i><span>发送管理</span>
                         </div>
@@ -31,7 +31,7 @@
                             <li><a href="list.php?action=smg" target="main" title="">发送管理</a> </li>
                             <li><a href="wechat_api/get_news.php?action=syn" target="main" title="">同步图文数据</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                     <li class="user-account-nav-list-item">
                         <div class="user-account-nav-item">
                             <i class="user-nav-message-manage"></i><span>其他功能</span>

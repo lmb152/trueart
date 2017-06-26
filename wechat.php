@@ -1,4 +1,5 @@
 <?php
+    echo md5('1234567890');exit;
     $appid='wxcf102de002227700';
     //设置secret
     //$secret='529b98cb83c7381f0c928f513b414510';
@@ -38,9 +39,4 @@
         curl_close($ch);
         return $data;
     }
-    https://api.weixin.qq.com/sns/userinfo?access_token=2Uj9tle5tUtVHBn3YY8LxyOZkGvFNjWmGF-sW5SB0tyAxaPqWSBZg5TRWXYrM82SE-2f2eQBtVOiJydIqRco4KNGBraTvmgRxh4nqKWgjaA&openid=oZG2QjvgPFwFwVsvZ_vtkgmKwXZ8&lang=zh_CN 
-
-
-    https://api.weixin.qq.com/sns/userinfo?access_token=r4YCuhf9B-LtHbCplcxf9S4gmx_5zjil0QxXcir9fLUfJb4l1u1wa6rfO3t-XRy_JRRnqzP8HQQNCqS0HxwR6cXRJsAy0e93RYAC_wkLPvA&openid=oZG2QjrKB_h3rXlbc_xajvVgsHvE
-    https://api.weixin.qq.com/sns/userinfo?access_token=wGjrGrugHh0RG6GYQn-LOX0JaZL1stWbUj5gesuVLZ0Zsausf_F5ngPEGi9dRXQ1_X6OqOgOfNAxaQN0zVhfrLY3rfQuIeiMuZiUQrIWBps&openid=oZG2QjrKB_h3rXlbc_xajvVgsHvE
-    https://api.weixin.qq.com/cgi-bin/user/info?access_token=wGjrGrugHh0RG6GYQn-LOX0JaZL1stWbUj5gesuVLZ0Zsausf_F5ngPEGi9dRXQ1_X6OqOgOfNAxaQN0zVhfrLY3rfQuIeiMuZiUQrIWBps&openid=oZG2QjrKB_h3rXlbc_xajvVgsHvE&lang=zh_CN 
+   

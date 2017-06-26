@@ -1,6 +1,7 @@
 <?php
 header("Content-type: text/html; charset=utf-8"); 
 header('Content-type: application/json');
+header("Access-Control-Allow-Origin: *");
 require_once 'medoo.php';
 require_once 'api.class.php';
 $api = new api($database);
@@ -63,4 +64,9 @@ if($_POST['action'] == 'editkeywords'){
 	// 编辑关键字
 	$api->editkeywords();
 }
+if($_POST['action'] == 'add_tempqrcode'){
+	// 编辑关键字
+	$api->add_tempqrcode();
+}
+
 ?>

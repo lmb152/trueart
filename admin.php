@@ -10,6 +10,9 @@
 	if ($_POST['action']=="update") {
 		$controller->update();
 	}
+	if ($_POST['action']=="edituser") {
+		$controller->edituser();
+	}
 	if ($_POST['action']=="adduser") {
 		$controller->adduser();
 	}
@@ -19,12 +22,12 @@
 	}else if($_GET['action']=='clean'){
 		// 清空数据
 		$controller->clean();
-	}else if($_GET['action']=='update'){
-        //修改密码
-        $controller->update();
 	}else if($_GET['action']=='logout'){
-		// 清空数据
+		
 		$controller->logout();
+	}else if($_GET['action']=='single_delete'){
+		
+		$controller->single_delete();
 	}
 
 ?>

@@ -2,11 +2,17 @@
 /*
   获取用户信息
  */
-require_once "config.php";
+// require_once "config.php";
 require_once "wx_sdk.php";
 require_once "common.php";
 require_once "../medoo.php";
+$uid=$_SESSION['uid'];
+$user_sql="select * from user where uid='".$uid."'";
+$userinfo=$database->query($user_sql)->fetch();
+$appid=$userinfo['appid'];
+$secret=$userinfo['secret'];
 $sdk = new WX_SDK($appid, $secret);
+
 $common=new common();
 //Appid与Secret参数检查
 if (empty($appid) || empty($secret)) {
@@ -37,6 +43,7 @@ if($_GET['action']=='syn'){
 			$news_data['news_title']=$title;
 			$news_data['update_time']=$value->update_time;
 			$news_data['media_id']=$value->media_id;
+			$news_data['uid']=$uid;
 			$database->insert('wechat_news',$news_data);
 		}
 	}

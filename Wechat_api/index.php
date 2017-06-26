@@ -3,28 +3,60 @@
     崇真艺客 http://www.fangbei.org/
     CopyRight 2015 All Rights Reserved
 */
-require_once "config.php";
-require_once "wx_sdk.php";
-require_once '../medoo.php';
-require_once '../api.class.php';
+
 define("TOKEN", "wechat_abcd_1234");
-$sdk = new WX_SDK($appid, $secret);
-$wechatObj = new wechatCallbackapiTest($database,$sdk->getAccessTokenOnly());
+
+
+// $result=$wechatObj->wechat_keyword('关键字测试');
+// echo "<pre>";
+// print_r(unserialize($result['content']['content']));exit;
+
+
+// echo "<pre>";print_r($content);exit;
 if (!isset($_GET['echostr'])) {
+    $wechatObj = new wechatCallbackapiTest();
+    // $data=$wechatObj->wechat_subscribe();
+    // echo "<pre>";
+    // print_r($data);exit;
     $wechatObj->responseMsg();
 }else{
-    $wechatObj->valid();
+    $echoStr = $_GET["echostr"];
+    $signature = $_GET["signature"];
+    $timestamp = $_GET["timestamp"];
+    $nonce = $_GET["nonce"];
+    $token = TOKEN;
+    $tmpArr = array($token, $timestamp, $nonce);
+    sort($tmpArr, SORT_STRING);
+    $tmpStr = implode($tmpArr);
+    $tmpStr = sha1($tmpStr);
+    if($tmpStr == $signature){
+        echo $echoStr;
+        exit;
+    }
+    // $wechatObj->valid();
 }
 
 class wechatCallbackapiTest
 {
     protected $database = '';
-    protected $res_data='';
     protected $access_token='';
+    protected $brand='';
     // 构造函数
-    public function __construct($database,$access_token){
+    public function __construct(){
+        require_once "wx_sdk.php";
+        require_once '../api.class.php';
+        require_once '../medoo.php';
         $this->database = $database;
-        $this->access_token = $access_token;
+        if(isset($_GET['uid'])){
+            $uid=$_GET['uid'];
+            $user_sql="select * from user where uid='".$uid."'";
+            $userinfo=$database->query($user_sql)->fetch();
+            $appid=$userinfo['appid'];
+            $secret=$userinfo['secret'];
+            $this->brand=$userinfo['brand'];
+            $sdk = new WX_SDK($appid, $secret);
+            $this->access_token = json_decode($sdk->getAccessTokenOnly())->access_token;
+        }
     }
     //验证签名
     public function valid()
@@ -39,8 +71,7 @@ class wechatCallbackapiTest
         $tmpStr = implode($tmpArr);
         $tmpStr = sha1($tmpStr);
         if($tmpStr == $signature){
-            echo $echoStr;
-            exit;
+            return $echoStr;
         }
     }
 
@@ -109,6 +140,7 @@ class wechatCallbackapiTest
                 // $this->logger("R \r\n".'123123');
                 if(isset($object->Ticket)){
                     $sence_ticket = $object->Ticket;
+                    $this->logger("R \r\n".$sence_ticket);
                     $data=$this->wechat_qrcode($sence_ticket);
                     if($data && $data['image']){
                         $this->logger("R \r\n".$data['image']);
@@ -119,20 +151,44 @@ class wechatCallbackapiTest
                             'Url'=>$data['linkurl']
                         );
                     }else{
-                        $content = "扫描场景 ".$data;
+                        $content = "很抱歉,不清楚您需要些什么，请稍后重试或联系崇真艺客";
                     }
                     
                 }else{
                     $data=$this->wechat_subscribe();
-                    if($data && $data['image']){
-                        $content[]=array(
-                            'PicUrl' =>$data['image'], 
-                            'Title'=>$data['title'],
-                            'Description'=>$data['description'],
-                            'Url'=>$data['linkurl']
-                        );
+                    if($data){
+                        switch ($data['type']) {
+                            case '1':
+                                $content=$data['content'];
+                                break;
+                            case '2':
+                                $data=$data['content']->news_item[0];
+                                $content[]=array(
+                                    'PicUrl' =>$data->thumb_url, 
+                                    'Title'=>$data->title,
+                                    'Description'=>$data->description,
+                                    'Url'=>$data->url
+                                );
+                                $this->logger("R \r\n".$data->thumb_url);
+                                break;
+                            case '3':
+                                $content=$data['content'];
+                                break;
+                            case '4':
+                                $content[]=array(
+                                    'PicUrl' =>$data['image'], 
+                                    'Title'=>$data['title'],
+                                    'Description'=>$data['description'],
+                                    'Url'=>$data['linkurl']
+                                );
+                                break;
+                            default:
+                                $content='欢迎关注本微信公众号';
+                                break;
+                        }
+                        
                     }else{
-                        $content = $data['description'];
+                        $content = '欢迎关注本微信公众号';
                     }
                 }
 
@@ -213,7 +269,6 @@ class wechatCallbackapiTest
                 // $content = "receive a new event: ".$object->Event;
                 break;
         }
-
         if(is_array($content)){
             if (isset($content[0]['PicUrl'])){
                 $result = $this->transmitNews($object, $content);
@@ -227,12 +282,32 @@ class wechatCallbackapiTest
     }
     // 获取微信自动关注回复
     public function wechat_subscribe(){
-        $sql='select * from subscribe where user_id=1';
-        $datas = $this->database->query($sql)->fetchAll();
-        if(count($datas)>0){
-            $img_src=unserialize($datas[0]['content']);
-            $datas[0]['image']=$img_src[1];
-            return $datas[0];
+        $sql='select * from subscribe where user_id="'.$_GET['uid'].'"';
+        $data = $this->database->query($sql)->fetch();
+        if(count($data)>0){
+            $return=array();
+            $return['type']=$data['type'];
+            if($data['type']=='1'){
+                $return['content']=$data['content_des'];
+            }else if($data['type']=='2'){
+                $access_token=$this->access_token;
+                $media_url='https://api.weixin.qq.com/cgi-bin/material/get_material?access_token='.$access_token;
+                $post_data=array('media_id' =>$data['related_article']);
+                $result=json_decode($this->https_request($media_url,json_encode($post_data)));
+                $return=array(
+                        'type'=>'2',
+                        'content'=>$result
+                    );
+            }else if($data['type']=='3'){
+                $return['content']=$data['linkurl'];
+            }else if($data['type']=='4'){
+                $img_src=unserialize($data['content']);
+                $return['image']=$img_src[1];
+                $return['title']=$data['title'];
+                $return['description']=$data['description'];
+                $return['linkurl']=$data['linkurl'];
+            }
+            return $return;
         }else{
             return false;
         }
@@ -240,10 +315,10 @@ class wechatCallbackapiTest
     //根据场景二维码ticket获取内容
     public function wechat_qrcode($qrcode_sence_ticket){
         $sql='select * from sence_qrcode where ticket="'.$qrcode_sence_ticket.'"';
-        $datas = $this->database->query($sql)->fetchAll();
-        if(count($datas)>0){
+        $datas = $this->database->query($sql)->fetch();
+        if($datas){
             // 获取推送的图文推内容
-            $sql="select * from qrcode_content where qrcode_id=".$datas[0]['id'];
+            $sql="select * from qrcode_content where qrcode_type=0 and qrcode_id=".$datas['id'];
             $contents=$this->database->query($sql)->fetchAll();
             if(count($contents)>0){
                 $img_src=unserialize($contents[0]['content']);
@@ -254,12 +329,31 @@ class wechatCallbackapiTest
             }
             
         }else{
-            return false;
+            $sql_temp='select * from qrcode_temp where qt_ticket="'.$qrcode_sence_ticket.'"';
+            $temp_datas=$this->database->query($sql_temp)->fetch();
+            if($temp_datas){
+                // 获取推送的图文推内容
+                $sql="select * from qrcode_content where qrcode_type=1 and qrcode_id=".$temp_datas['qt_id'];
+                $contents=$this->database->query($sql)->fetchAll();
+                if(count($contents)>0){
+                    $img_src=unserialize($contents[0]['content']);
+                    if(isset($img_src)){
+                        $contents[0]['image']=$img_src[1];
+                    }else{
+                        $contents[0]['image']=$img_src[1];
+                    }
+                    return $contents[0];
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
         }
     }
     //按关键字搜索回复的内容
     public function wechat_keyword($keyword){
-        $sql='select * from keywords where keyword="'.$keyword.'"';
+        $sql='select * from keywords where keyword="'.$keyword.'" and uid="'.$_GET['uid'].'"';
         $data = $this->database->query($sql)->fetch();
         if(count($data)){
             if($data['type']=='1'){
@@ -268,20 +362,26 @@ class wechatCallbackapiTest
                         'content'=>$data['content']
                     );
             }else if($data['type']=='2'){
-                // $access_token=json_decode($this->access_token)->access_token;
-                // $media_url='https://api.weixin.qq.com/cgi-bin/material/get_material?access_token='.$access_token;
-                // $post_data=array('media_id' =>$data['related_article']);
-                // $result=json_decode($this->https_request($media_url,json_encode($post_data)));
-                // $result=$result->news_item;
-                // $result=json_decode($this->https_request($media_url,json_encode($post_data)));
+                $access_token=$this->access_token;
+                $media_url='https://api.weixin.qq.com/cgi-bin/material/get_material?access_token='.$access_token;
+                $post_data=array('media_id' =>$data['related_article']);
+                $result=json_decode($this->https_request($media_url,json_encode($post_data)));
                 $output=array(
                         'type'=>'2',
-                        'content'=>'不清楚你需要什么'
+                        'content'=>$result
                     );
             }else if($data['type']=='3'){
                 $output=array(
                         'type'=>'3',
                         'content'=>$data['linkurl']
+                    );
+            }
+            else if($data['type']=='4'){
+                $keywords_content_sql="select * from keywords_content where keywords_id='".$data['id']."'";
+                $keywords_content=$this->database->query($keywords_content_sql)->fetch();
+                $output=array(
+                        'type'=>'4',
+                        'content'=>$keywords_content
                     );
             }
             return $output;
@@ -295,9 +395,24 @@ class wechatCallbackapiTest
         $keyword = trim($object->Content);
         $data=$this->wechat_keyword($keyword);
         if($data){
-            $content=$data['content'];
+            if($data['type']==2){
+                $news_item=$data['content'];
+                $content = array();
+                foreach ($news_item->news_item as $key => $value) {
+                    $content[] = array("Title"=>$value->title, "Description"=>$value->digest, "PicUrl"=>$value->thumb_url, "Url" =>$value->url);
+                }
+            }else if($data['type']==4){
+                $content = array();
+                $data=$data['content'];
+                $thumb_url=unserialize($data['content']);
+                $thumb_url=$thumb_url[1];
+                $content[] = array("Title"=>$data['title'], "Description"=>$data['description'], "PicUrl"=>$thumb_url, "Url" =>$data['linkurl']);
+
+            }else{
+                $content=$data['content'];
+            }
         }else{
-            $content = "崇真艺客没明白您在说什么";
+            $content = $this->brand."没明白您在说什么";
         }
         //多客服人工回复模式
         // if (strstr($keyword, "请问在吗") || strstr($keyword, "在线客服")){

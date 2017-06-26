@@ -375,7 +375,7 @@ require_once 'medoo.php';
 ?>
 <div id="main">
 	<div class="content">
-		<form action="api.php" method="post">
+		<form action="api.php" method="post" enctype="multipart/form-data">
 			<table class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td class="tit2" colspan='2' valign="top" width="15%" align="center">新建关键字</td>
@@ -401,6 +401,7 @@ require_once 'medoo.php';
 								<option value='1'>文本类型</option>
 								<option value='2'>微信图文推</option>
 								<option value='3'>链接</option>
+								<option value='4'>自定义图文推</option>
 							</select>
 						</div>
 					</td>
@@ -422,6 +423,32 @@ require_once 'medoo.php';
 									<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
 								<?php }?>
 							</select>
+							<div style='display: none;' id="releated_content">
+								<div>
+									<div class="form-group col-sm-3">外链地址:</div>
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control" name="linkurl">
+									</div>
+								</div>
+								<div>
+									<div class="form-group col-sm-3">标题:</div>
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control" name="title">
+									</div>
+								</div>
+								<div>
+									<div class="form-group col-sm-3">描述:</div>
+									<div class="form-group col-sm-9">
+										<textarea type="text" class="form-control" name="description"></textarea>
+									</div>
+								</div>
+								<div>
+									<div class="form-group col-sm-3">图文中间的图片:</div>
+									<div class="form-group col-sm-9">
+										<input type="file" class="form-control" name="file_content">
+									</div>
+								</div>
+							</div>
 						</div>
 						
 					</td>
@@ -446,14 +473,22 @@ require_once 'medoo.php';
 				$('#content').css('display','block');
 				$('#linkurl').css('display','none');
 				$('#related_article').css('display','none');
+				$('#releated_content').css('display','none');
 			}else if(type==2){
 				$('#related_article').css('display','block');
 				$('#linkurl').css('display','none');
 				$('#content').css('display','none');
+				$('#releated_content').css('display','none');
 			}else if(type==3){
 				$('#linkurl').css('display','block');
 				$('#related_article').css('display','none');
 				$('#content').css('display','none');
+				$('#releated_content').css('display','none');
+			}else if(type==4){
+				$('#linkurl').css('display','none');
+				$('#related_article').css('display','none');
+				$('#content').css('display','none');
+				$('#releated_content').css('display','block');
 			}
 		});
 	})
@@ -469,7 +504,7 @@ $data = $database->query($sql)->fetch();
 ?>
 <div id="main">
 	<div class="content">
-		<form action="api.php" method="post">
+		<form action="api.php" method="post" enctype="multipart/form-data">
 			<table class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td class="tit2" colspan='2' valign="top" width="15%" align="center">编辑关键字</td>
@@ -499,10 +534,13 @@ $data = $database->query($sql)->fetch();
 								                $type='文本类型';
 								                break;
 								            case '2':
-								                $type='图文推';
+								                $type='微信图文推';
 								                break;
 								            case '3':
 								                $type='链接';
+								                break;
+								            case '4':
+								                $type='自定义图文推';
 								                break;
 										}
 										echo $type;
@@ -511,6 +549,7 @@ $data = $database->query($sql)->fetch();
 								<option value='1'>文本类型</option>
 								<option value='2'>微信图文推</option>
 								<option value='3'>链接</option>
+								<option value='4'>自定义图文推</option>
 							</select>
 						</div>
 						
@@ -521,7 +560,7 @@ $data = $database->query($sql)->fetch();
 						回复内容
 					</td>
 					<td valign="top" align="center">
-						<div class="form-group col-sm-5">
+						<div class="form-group col-sm-6">
 							<textarea class="form-control" id='content' <?php if($data['type']!='1'):?> style='display: none;'<?php endif;?>  type="text" name="content" ><?php echo $data['content'];?></textarea>
 							<input class="form-control" <?php if($data['type']!='3'):?> style='display: none;'<?php endif;?> id='linkurl' type='text' name='linkurl' value='<?php echo $data['linkurl'];?>'/>
 							<select class="form-control" <?php if($data['type']!='2'):?> style='display: none;'<?php endif;?> id='related_article' name='related_article'>
@@ -538,6 +577,38 @@ $data = $database->query($sql)->fetch();
 									<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
 								<?php }?>
 							</select>
+
+							<div <?php if ($data['type']!='4'):?>style='display: none;'<?php endif;?> id="releated_content">
+								<?php 
+									$keywords_sql="select * from keywords_content where keywords_id='".$data['id']."'";
+									$releated_content=$database->query($keywords_sql)->fetch();
+								?>
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">外链地址:</div>
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control" name="linkurl" <?php if($releated_content): echo "value='".$releated_content['linkurl']."'"; endif;?>>
+									</div>
+								</div>
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">标题:</div>
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control" name="title" <?php if($releated_content): echo "value='".$releated_content['title']."'";endif;?>>
+									</div>
+								</div>
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">描述:</div>
+									<div class="form-group col-sm-9">
+										<textarea type="text" class="form-control" name="description"><?php if($releated_content): echo $releated_content['description'];endif;?></textarea>
+									</div>
+								</div>
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">图文中间的图片:</div>
+									<div class="form-group col-sm-9">
+										<input type="file" class="form-control" name="file_content">
+									</div>
+									<input type="hidden" name='keywords_content_id' <?php if($releated_content): echo "value='".$releated_content['id']."'";endif;?>>
+								</div>
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -562,14 +633,22 @@ $data = $database->query($sql)->fetch();
 				$('#content').css('display','block');
 				$('#linkurl').css('display','none');
 				$('#related_article').css('display','none');
+				$('#releated_content').css('display','none');
 			}else if(type==2){
 				$('#related_article').css('display','block');
 				$('#linkurl').css('display','none');
 				$('#content').css('display','none');
+				$('#releated_content').css('display','none');
 			}else if(type==3){
 				$('#linkurl').css('display','block');
 				$('#related_article').css('display','none');
 				$('#content').css('display','none');
+				$('#releated_content').css('display','none');
+			}else if(type==4){
+				$('#linkurl').css('display','none');
+				$('#related_article').css('display','none');
+				$('#content').css('display','none');
+				$('#releated_content').css('display','block');
 			}
 		});
 	})

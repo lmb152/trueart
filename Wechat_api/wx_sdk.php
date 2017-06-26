@@ -12,23 +12,23 @@ class WX_SDK {
 
     public function getAccessTokenOnly() {
         // access_token 应该全局存储与更新，以下代码以写入到文件中做示例
-        $data = json_decode(file_get_contents("access_token.json"));
+        // $data = json_decode(file_get_contents("access_token.json"));
         
-        if ($data->expire_time < time()) {
+        // if ($data->expire_time < time()) {
             $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$this->appId&secret=$this->appSecret";
             $res_wechat_token=$this->httpGet($url);
             $res = json_decode($res_wechat_token);
             $access_token = $res->access_token;
-            if ($access_token) {
-                $data->expire_time = time() + 7000;
-                $data->access_token = $access_token;
-                $fp = fopen("access_token.json", "w");
-                fwrite($fp, json_encode($data));
-                fclose($fp);
-            }
-        } else {
-            $access_token = $data->access_token;
-        }
+            // if ($access_token) {
+            //     $data->expire_time = time() + 7000;
+            //     $data->access_token = $access_token;
+            //     $fp = fopen("access_token.json", "w");
+            //     fwrite($fp, json_encode($data));
+            //     fclose($fp);
+            // }
+        // } else {
+        //     $access_token = $data->access_token;
+        // }
         return json_encode(array('access_token'=>$access_token,'expires_in'=>7200));
     }
 
@@ -38,8 +38,8 @@ class WX_SDK {
      * @return type
      * @author David Dai <dzh403@gmail.com>
      */
-    public function getSignPackage($url) {
-        $jsapiTicket = $this->getJsApiTicket();
+    public function getSignPackage($url,$access_token) {
+        $jsapiTicket = $this->getJsApiTicket($access_token);
         $timestamp = time();
         $nonceStr = $this->createNonceStr();
 
@@ -95,26 +95,27 @@ class WX_SDK {
      * 获得JsApiTicket 
      * @return type 
      */
-    private function getJsApiTicket() {
+    private function getJsApiTicket($access_token) {
         // jsapi_ticket 应该全局存储与更新，以下代码以写入到文件中做示例
-        $data = json_decode(file_get_contents("jsapi_ticket.json"));
-        if ($data->expire_time < time()) {
-            $accessToken = $this->getAccessToken();
+        // $data = json_decode(file_get_contents("jsapi_ticket.json"));
+        // if ($data->expire_time < time()) {
+            // $accessToken = $this->getAccessToken();
+            $accessToken = $access_token;
             // 如果是企业号用以下 URL 获取 ticket
             // $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
             $url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=$accessToken";
             $res = json_decode($this->httpGet($url));
             $ticket = $res->ticket;
-            if ($ticket) {
-                $data->expire_time = time() + 7000;
-                $data->jsapi_ticket = $ticket;
-                $fp = fopen("jsapi_ticket.json", "w");
-                fwrite($fp, json_encode($data));
-                fclose($fp);
-            }
-        } else {
-            $ticket = $data->jsapi_ticket;
-        }
+            // if ($ticket) {
+            //     $data->expire_time = time() + 7000;
+            //     $data->jsapi_ticket = $ticket;
+            //     $fp = fopen("jsapi_ticket.json", "w");
+            //     fwrite($fp, json_encode($data));
+            //     fclose($fp);
+            // }
+        // } else {
+        //     $ticket = $data->jsapi_ticket;
+        // }
 
         return $ticket;
     }

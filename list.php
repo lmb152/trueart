@@ -118,71 +118,8 @@ require_once 'medoo.php';
 		</table>
 	</div>
 </div>
-<?php }elseif($_GET['action'] == 'subscribe'){
-$sql="select * from subscribe where user_id='".$_SESSION['uid']."' order by id desc";
-$data = $database->query($sql)->fetch();
-?>
-<div id="main">
-	<div class="content">
-		<form action="api.php" method="post" enctype="multipart/form-data">
-			<table class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td class="tit2" colspan='4' valign="top" align="center">自动回复图文内容</td>
-				</tr>
-				<tr>
-					<td>外链地址</td>
-					<td class="tit2" colspan='3' valign="top" align="center">
-						<div class="form-group col-sm-9">
-							<input type='text' class="form-control" name='linkurl' value="<?php print_r($data['linkurl']);?>" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>标题</td>
-					<td class="tit2" colspan='3'  valign="top" align="center">
-						<div class="form-group col-sm-9">
-							<input type='text' class="form-control" name='title' value="<?php print_r($data['title']);?>"/>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>描述</td>
-					<td class="tit2" colspan='3'  valign="top" align="center">
-						<div class="form-group col-sm-9">
-							<textarea type='text' class="form-control" name='description'><?php print_r($data['description']);?></textarea>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>图文中间的图片</td>
-					<td valign="top" align="center">
-						<div class="form-group col-sm-9">
-							<input type='file' class="form-control" name='content' />
-						</div>
-					</td>
-
-					<td colspan='2'>
-						<?php if(!empty($data['content']) && $data['content']){
-							$imgsrc=unserialize($data['content']);
-						?>
-							<img width='200px;' src="<?php echo $imgsrc[0];?>">
-						<?php }?>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="4" valign="top" align="center">
-						<input type="submit" value="保存"/>
-						<input type="hidden" name="action" value="addsubscribe"/>
-					</td>
-					
-				</tr>
-			</table>
-		</form>
-		
-	</div>
-</div>
 <?php }elseif($_GET['action'] == 'qrcode'){
-$sql="select * from sence_qrcode";
+$sql="select * from sence_qrcode where uid='".$_SESSION['uid']."'";
 $datas = $database->query($sql)->fetchAll();
 ?>
 	<table class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
@@ -223,7 +160,7 @@ $datas = $database->query($sql)->fetchAll();
 		<?php } ?>
 	</table>
 <?php }elseif($_GET['action'] == 'editqrcode'){
-$sql="select * from qrcode_content where user_id='".$_SESSION['uid']."' and qrcode_id=".$_GET['qrcode_id']." order by id desc";
+$sql="select * from qrcode_content where user_id='".$_SESSION['uid']."' and qrcode_id=".$_GET['qrcode_id']." and qrcode_type=0 order by id desc";
 $datas = $database->query($sql)->fetch();
 ?>
 <div id="main">
@@ -234,7 +171,7 @@ $datas = $database->query($sql)->fetch();
 					<td class="tit2" colspan='4' valign="top" align="center">自动回复图文内容</td>
 				</tr>
 				<tr>
-					<td>外链地址</td>
+					<td>外链地址<span style='color:red;'>*</span></td>
 					<td class="tit2" colspan='3' valign="top" align="center">
 						<div class="form-group col-sm-9">
 							<input type='text' class="form-control" name='linkurl' value="<?php print_r($datas['linkurl']);?>" />
@@ -242,7 +179,7 @@ $datas = $database->query($sql)->fetch();
 					</td>
 				</tr>
 				<tr>
-					<td>标题</td>
+					<td>标题<span style='color:red;'>*</span></td>
 					<td class="tit2" colspan='3'  valign="top" align="center">
 						<div class="form-group col-sm-9">
 							<input type='text' class="form-control" name='title' value="<?php print_r($datas['title']);?>"/>
@@ -258,7 +195,7 @@ $datas = $database->query($sql)->fetch();
 					</td>
 				</tr>
 				<tr>
-					<td>图文中间的图片</td>
+					<td>图文中间的图片<span style='color:red;'>*</span></td>
 					<td valign="top" align="center">
 						<div class="form-group col-sm-9">
 							<input type='file' class="form-control" name='content' />
@@ -381,10 +318,13 @@ $datas = $database->query($sql)->fetch();
 				                $output='文本类型';
 				                break;
 				            case '2':
-				                $output='图文推';
+				                $output='微信图文推';
 				                break;
 				            case '3':
 				                $output='链接';
+				                break;
+				            case '4':
+				                $output='自定义图文推';
 				                break;
 				            default:
 				                $output='文本类型';
@@ -402,18 +342,147 @@ $datas = $database->query($sql)->fetch();
 		</table>
 	</div>
 </div>
+<?php }elseif($_GET['action'] == 'subscribe'){
+$sql="select * from subscribe where user_id='".$_SESSION['uid']."' order by id desc";
+$data = $database->query($sql)->fetch();
+?>
+<div id="main">
+	<div class="content">
+		<form action="api.php" method="post" enctype="multipart/form-data">
+			<table class="table table-striped" width="100%" cellspacing="0" cellpadding="0">
+				<tr>
+					<td class="tit2" colspan='4' valign="top" align="center">自动回复图文内容</td>
+				</tr>
+				<tr>
+					<td valign="top" align="center">
+						回复类型
+					</td>
+					<td valign="top" align="center">
+						<div class="form-group col-sm-5">
+							<select id="select_type" class="form-control" name='type'>
+								<option value='<?php echo $data['type'];?>'>
+									<?php 
+										switch ($data['type']) {
+								            case '1':
+								                $type='文本类型';
+								                break;
+								            case '2':
+								                $type='微信图文推';
+								                break;
+								            case '3':
+								                $type='链接';
+								                break;
+								            case '4':
+								                $type='自定义图文推';
+								                break;
+										}
+										echo $type;
+									?>
+								</option>
+								<option value='1'>文本类型</option>
+								<option value='2'>微信图文推</option>
+								<option value='3'>链接</option>
+								<option value='4'>自定义图文推</option>
+							</select>
+						</div>
+						
+					</td>
+				</tr>
+				<tr>
+					<td valign="top" align="center">
+						回复内容
+					</td>
+					<td valign="top" align="center">
+						<div class="form-group col-sm-6">
+							<textarea class="form-control" id='content' <?php if($data['type']!='1'):?> style='display: none;'<?php endif;?>  type="text" name="content_des" ><?php echo $data['content_des'];?></textarea>
+							<input class="form-control" <?php if($data['type']!='3'):?> style='display: none;'<?php endif;?> id='linkurl' type='text' name='linkurl1' value='<?php echo $data['linkurl'];?>'/>
+							<select class="form-control" <?php if($data['type']!='2'):?> style='display: none;'<?php endif;?> id='related_article' name='related_article'>
+								<?php 
+									$news_all="select * from wechat_news where uid='".$_SESSION['uid']."' order by update_time desc";
+									$allnews=$database->query($news_all)->fetchAll();
+									$new_sql="select * from wechat_news where media_id='".$data['related_article']."'";
+									$new=$database->query($new_sql)->fetch();
+								?>
+								<?php if($data['type']=='2'):?>
+								<option value='<?php echo $data['related_article'];?>'><?php echo $new['news_title']?></option>
+								<?php endif;?>
+								<?php foreach ($allnews as $key => $value) {?>
+									<option value="<?php echo $value['media_id']?>"><?php echo $value['news_title']?></option>
+								<?php }?>
+							</select>
+
+							<div <?php if ($data['type']!='4'):?>style='display: none;'<?php endif;?> id="releated_content">
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">外链地址:</div>
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control" name="linkurl" value="<?php echo $data['linkurl'];?>">
+									</div>
+								</div>
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">标题:</div>
+									<div class="form-group col-sm-9">
+										<input type="text" class="form-control" name="title" value="<?php echo $data['title'];?>">
+									</div>
+								</div>
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">描述:</div>
+									<div class="form-group col-sm-9">
+										<textarea type="text" class="form-control" name="description"><?php echo $data['description'];?></textarea>
+									</div>
+								</div>
+								<div class="form-group col-sm-12">
+									<div class="form-group col-sm-3">图文中间的图片:</div>
+									<div class="form-group col-sm-9">
+										<input type="file" class="form-control" name="content">
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" valign="top" align="center">
+						<input type="submit" value="保存"/>
+						<input type="hidden" name="action" value="addsubscribe"/>
+					</td>
+					
+				</tr>
+			</table>
+		</form>
+		
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#select_type').change(function(){
+			var type=$(this).val();
+			if(type==1){
+				$('#content').css('display','block');
+				$('#linkurl').css('display','none');
+				$('#related_article').css('display','none');
+				$('#releated_content').css('display','none');
+			}else if(type==2){
+				$('#related_article').css('display','block');
+				$('#linkurl').css('display','none');
+				$('#content').css('display','none');
+				$('#releated_content').css('display','none');
+			}else if(type==3){
+				$('#linkurl').css('display','block');
+				$('#related_article').css('display','none');
+				$('#content').css('display','none');
+				$('#releated_content').css('display','none');
+			}else if(type==4){
+				$('#linkurl').css('display','none');
+				$('#related_article').css('display','none');
+				$('#content').css('display','none');
+				$('#releated_content').css('display','block');
+			}
+		});
+	})
+</script>
 <?php
 }
 ?>
 </body>
-<script src="/js/jquery.js"></script>
-<!-- <script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" src="/ueditor/ueditor.all.min.js"></script>
-<script type="text/javascript">
-	var ue = UE.getEditor('content',{
-        initialFrameWidth: 1000,
-        initialFrameHeight:500
-    });
-</script> -->
 
 </html>
